@@ -24,7 +24,6 @@ def create_fill_in_question(db: SessionLocal, question: question_schemas.FillInQ
     db.add(question_model)
     db.commit()
 
-    db.refresh(question_model)
     return question_model
 
 def create_multiple_choice_question(db: SessionLocal, question: question_schemas.MultipleChoiceQuestionCreate):
@@ -37,22 +36,17 @@ def create_multiple_choice_question(db: SessionLocal, question: question_schemas
         usage=question.usage
     )
 
-    db.add(question_model)
-    db.flush()
-
     for answer in question.answers:
         answer_model = question_models.MultipleChoiceAnswer(
-            question_id=question_model.id,
             choice_number=answer.choice_number,
             answer_text = answer.answer_text,
             is_correct = answer.is_correct
         )
 
-        db.add(answer_model)
         question_model.answers.append(answer_model)
-
+        
+    db.add(question_model)
     db.commit()
-    db.refresh(question_model)
 
     return question_model
 
