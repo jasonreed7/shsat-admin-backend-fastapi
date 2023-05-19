@@ -8,8 +8,8 @@ END;
 $$ language 'plpgsql';
 
 -- Enums
-CREATE TYPE question_type AS ENUM ('multiple_choice', 'fill_in');
-CREATE TYPE question_usage AS ENUM ('official_test_question', 'test_question', 'problem_set_question');
+CREATE TYPE question_type AS ENUM ('MULTIPLE_CHOICE', 'FILL_IN');
+CREATE TYPE question_usage AS ENUM ('OFFICIAL_TEST_QUESTION', 'TEST_QUESTION', 'PROBLEM_SET_QUESTION');
 
 -- Official Test Table
 CREATE TABLE official_test (
@@ -47,7 +47,7 @@ EXECUTE PROCEDURE update_updated_at_column();
 -- Fill In Answer Table
 CREATE TABLE fill_in_answer (
     question_id BIGINT PRIMARY KEY REFERENCES question(id),
-    answer NUMERIC(4, 3) NOT NULL,
+    answer NUMERIC(7, 3) NOT NULL,
     created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
 );
