@@ -31,9 +31,7 @@ CREATE TABLE question (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     official_test_id BIGINT REFERENCES official_test(id),
     official_test_question_number INT,
-    question_text TEXT NOT NULL,
     q_type question_type NOT NULL,
-    explanation TEXT NOT NULL,
     usage question_usage,
     created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
@@ -44,22 +42,21 @@ BEFORE UPDATE ON question
 FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_column();
 
--- Fill In Answer Table
-CREATE TABLE fill_in_answer (
-    question_id BIGINT PRIMARY KEY REFERENCES question(id),
-    answer NUMERIC(7, 3) NOT NULL,
-    created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
-    updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
+CREATE TABLE text_question (
+    question_id BIGINT PRIMARY KEY REFERENCES question(id) ON DELETE CASCADE,
+    question_text TEXT NOT NULL,
+    explanation TEXT NOT NULL
 );
 
-CREATE TRIGGER update_updated_at_fill_in_answer
-BEFORE UPDATE ON fill_in_answer
-FOR EACH ROW
-EXECUTE PROCEDURE update_updated_at_column();
+-- Fill In Question Table
+CREATE TABLE fill_in_question (
+    question_id BIGINT PRIMARY KEY REFERENCES text_question(question_id) ON DELETE CASCADE,
+    answer NUMERIC(7, 3) NOT NULL
+);
 
 -- Multiple Choice Answer Table
 CREATE TABLE multiple_choice_answer (
-    question_id BIGINT REFERENCES question(id),
+    question_id BIGINT REFERENCES question(id) ON DELETE CASCADE,
     choice_number INT CHECK (choice_number BETWEEN 1 AND 4),
     answer_text TEXT NOT NULL,
     is_correct BOOLEAN,

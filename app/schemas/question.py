@@ -7,9 +7,7 @@ from app.models.question import QuestionType, QuestionUsage
 class QuestionBase(BaseModel):
     official_test_id: int
     official_test_question_number: int
-    question_text: str
     q_type: QuestionType
-    explanation: str
     usage: Optional[QuestionUsage]
 
     class Config:
@@ -22,6 +20,23 @@ class Question(QuestionBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
+class TextQuestionBase(QuestionBase):
+    question_text: str
+    explanation: str
+
+class TextQuestionCreate(TextQuestionBase):
+    pass
+
+class TextQuestion(TextQuestionBase, Question):
+    pass
+
+class FillInQuestionCreate(TextQuestionCreate):
+    answer: float
+
+class FillInQuestion(TextQuestion):
+    q_type: Literal[QuestionType.FILL_IN]
+    answer: float
 
 class MultipleChoiceAnswerBase(BaseModel):
     choice_number: int
@@ -38,18 +53,11 @@ class MultipleChoiceAnswer(MultipleChoiceAnswerBase):
     question_id: int
     created_at: datetime
     updated_at: datetime
-    
-class FillInQuestionCreate(QuestionCreate):
-    answer: float
 
-class FillInQuestion(Question):
-    q_type: Literal[QuestionType.FILL_IN]
-    answer: float
-
-class MultipleChoiceQuestionCreate(QuestionCreate):
+class MultipleChoiceQuestionCreate(TextQuestionCreate):
     answers: list[MultipleChoiceAnswerCreate]
 
-class MultipleChoiceQuestion(Question):
+class MultipleChoiceQuestion(TextQuestion):
     q_type: Literal[QuestionType.MULTIPLE_CHOICE]
     answers: list[MultipleChoiceAnswer]
 
