@@ -10,7 +10,7 @@ router = APIRouter()
 
 
 @router.post("/fillInQuestion/")
-def create_fill_in_question(question: question_schemas.FillInQuestionCreate, db: SessionLocal = Depends(get_db)):
+def create_fill_in_question(question: question_schemas.FillInQuestionCreate, db: SessionLocal = Depends(get_db)) -> question_schemas.FillInQuestion:
     return question_repository.create_fill_in_question(db, question)
 
 

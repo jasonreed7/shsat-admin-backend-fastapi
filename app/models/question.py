@@ -34,14 +34,6 @@ class Question(Base):
         "polymorphic_on": "q_type",
     }
 
-class FillInAnswer(Base):
-    __tablename__ = 'fill_in_answer'
-    
-    question_id: Mapped[int] = mapped_column(ForeignKey("question.id"), primary_key=True)
-    answer: Mapped[float] = mapped_column(Numeric(7, 3))
-    created_at: Mapped[datetime] = mapped_column(default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(default=func.now(), onupdate=func.now())
-
 class MultipleChoiceAnswer(Base):
     __tablename__ = 'multiple_choice_answer'
     

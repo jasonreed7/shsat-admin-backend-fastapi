@@ -11,30 +11,21 @@ def get_questions(db: SessionLocal):
     return result
 
 def create_fill_in_question(db: SessionLocal, question: question_schemas.FillInQuestionCreate):
-    question_model = question_models.Question(
+    question_model = question_models.FillInQuestion(
         official_test_id=question.official_test_id,
         official_test_question_number=question.official_test_question_number,
         question_text=question.question_text,
         q_type=question.q_type,
         explanation=question.explanation,
-        usage=question.usage
+        usage=question.usage,
+        answer=question.answer
     )
 
-    # answer_model = question_models.FillInAnswer(
-    #     answer=question.answer.answer
-    # )
-
     db.add(question_model)
-    db.flush()
-
-    # answer_model.question_id = question_model.id
-    # db.add(answer_model)
     db.commit()
 
     db.refresh(question_model)
-    # db.refresh(answer_model)
-
-    # return [question_model, answer_model]
+    return question_model
 
 def create_multiple_choice_question(db: SessionLocal, question: question_schemas.MultipleChoiceQuestionCreate):
     question_model = question_models.MultipleChoiceQuestion(

@@ -23,20 +23,6 @@ class Question(QuestionBase):
     created_at: datetime
     updated_at: datetime
 
-class FillInAnswerBase(BaseModel):
-    answer: float
-
-    class Config:
-        orm_mode = True
-
-class FillInAnswerCreate(FillInAnswerBase):
-    pass
-
-class FillInAnswer(FillInAnswerBase):
-    question_id: int
-    created_at: datetime
-    updated_at: datetime
-
 class MultipleChoiceAnswerBase(BaseModel):
     choice_number: int
     answer_text: str
@@ -54,14 +40,14 @@ class MultipleChoiceAnswer(MultipleChoiceAnswerBase):
     updated_at: datetime
     
 class FillInQuestionCreate(QuestionCreate):
-    answer: FillInAnswerCreate
-
-class MultipleChoiceQuestionCreate(QuestionCreate):
-    answers: list[MultipleChoiceAnswerCreate]
+    answer: float
 
 class FillInQuestion(Question):
     q_type: Literal[QuestionType.FILL_IN]
     answer: float
+
+class MultipleChoiceQuestionCreate(QuestionCreate):
+    answers: list[MultipleChoiceAnswerCreate]
 
 class MultipleChoiceQuestion(Question):
     q_type: Literal[QuestionType.MULTIPLE_CHOICE]
