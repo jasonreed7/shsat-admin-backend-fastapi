@@ -99,10 +99,25 @@ BEFORE UPDATE ON category
 FOR EACH ROW
 EXECUTE PROCEDURE update_updated_at_column();
 
+-- Subcategory Table
+CREATE TABLE subcategory (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    category_id BIGINT REFERENCES category(id) NOT NULL,
+    name TEXT NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
+);
+
+CREATE TRIGGER update_updated_at_subcategory
+BEFORE UPDATE ON subcategory
+FOR EACH ROW
+EXECUTE PROCEDURE update_updated_at_column();
+
 -- Tag Table
 CREATE TABLE tag (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    category_id BIGINT REFERENCES category(id) NOT NULL,
+    -- TODO: Consider delete cascade?
+    subcategory_id BIGINT REFERENCES subcategory(id) NOT NULL,
     name TEXT NOT NULL,
     created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
