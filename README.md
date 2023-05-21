@@ -16,6 +16,7 @@ cd shsat-admin-backend-fastapi
 
 ## Install pre-commit
 pre-commit runs some checks whenever you commit your code to fix formatting and check style.
+
 `pre-commit install`
 
 ## Create the database
