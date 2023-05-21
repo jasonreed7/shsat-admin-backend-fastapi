@@ -14,6 +14,11 @@ cd shsat-admin-backend-fastapi
 ## Install dependencies
 `pipenv install`
 
+## Install pre-commit
+pre-commit runs some checks whenever you commit your code to fix formatting and check style.
+
+`pre-commit install`
+
 ## Create the database
 Only needs to be done once. In pgadmin, create a database called `shsat` and then copy and run everything from `db_schema/schema.sql` on the new database.
 
