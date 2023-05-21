@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+
 from pydantic import BaseModel
 
 
@@ -9,13 +10,16 @@ class CategoryBase(BaseModel):
     class Config:
         orm_mode = True
 
+
 class CategoryCreate(CategoryBase):
     pass
+
 
 class Category(CategoryBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
 
 class SubcategoryBase(BaseModel):
     category_id: int
@@ -24,13 +28,16 @@ class SubcategoryBase(BaseModel):
     class Config:
         orm_mode = True
 
+
 class SubcategoryCreate(SubcategoryBase):
     pass
+
 
 class Subcategory(SubcategoryBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
 
 class TagBase(BaseModel):
     subcategory_id: int
@@ -39,13 +46,16 @@ class TagBase(BaseModel):
     class Config:
         orm_mode = True
 
+
 class TagCreate(TagBase):
     pass
+
 
 class Tag(TagBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
 
 class ResourceBase(BaseModel):
     tag_id: int
@@ -56,8 +66,10 @@ class ResourceBase(BaseModel):
     class Config:
         orm_mode = True
 
+
 class ResourceCreate(ResourceBase):
     pass
+
 
 class Resource(ResourceBase):
     id: int
