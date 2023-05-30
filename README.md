@@ -12,12 +12,15 @@ cd shsat-admin-backend-fastapi
 ```
 
 ## Install dependencies
-`pipenv install`
+`pipenv install --dev`
 
 ## Install pre-commit
 pre-commit runs some checks whenever you commit your code to fix formatting and check style.
 
 `pre-commit install`
+
+## Install pngquant if working with images
+[pgnquant](https://pngquant.org/) is used for compressing pngs. Install it if you are working on image questions. On Mac, install with `brew install pngquant`. On Windows, install from the website, you may need to add it to your PATH (?).
 
 ## Create the database
 Only needs to be done once. In pgadmin, create a database called `shsat` and then copy and run everything from `db_schema/schema.sql` on the new database.

@@ -27,7 +27,7 @@ def create_fill_in_question(
         official_test_id=question.official_test_id,
         official_test_question_number=question.official_test_question_number,
         question_text=question.question_text,
-        q_type=question.q_type,
+        q_type=question_models.QuestionType.FILL_IN,
         explanation=question.explanation,
         usage=question.usage,
         answer=question.answer,
@@ -46,7 +46,7 @@ def create_multiple_choice_question(
         official_test_id=question.official_test_id,
         official_test_question_number=question.official_test_question_number,
         question_text=question.question_text,
-        q_type=question.q_type,
+        q_type=question_models.QuestionType.MULTIPLE_CHOICE,
         explanation=question.explanation,
         usage=question.usage,
     )
@@ -59,6 +59,44 @@ def create_multiple_choice_question(
         )
 
         question_model.answers.append(answer_model)
+
+    db.add(question_model)
+    db.commit()
+
+    return question_model
+
+
+def create_fill_in_image_question(
+    db: SessionLocal, question: question_schemas.FillInImageQuestionCreate
+):
+    question_model = question_models.FillInImageQuestion(
+        official_test_id=question.official_test_id,
+        official_test_question_number=question.official_test_question_number,
+        q_type=question_models.QuestionType.FILL_IN_IMAGE,
+        usage=question.usage,
+        question_image_s3_key=question.question_image_s3_key,
+        answer_image_s3_key=question.answer_image_s3_key,
+        answer=question.answer,
+    )
+
+    db.add(question_model)
+    db.commit()
+
+    return question_model
+
+
+def create_multiple_choice_image_question(
+    db: SessionLocal, question: question_schemas.MultipleChoiceImageQuestionCreate
+):
+    question_model = question_models.MultipleChoiceImageQuestion(
+        official_test_id=question.official_test_id,
+        official_test_question_number=question.official_test_question_number,
+        q_type=question_models.QuestionType.MULTIPLE_CHOICE_IMAGE,
+        usage=question.usage,
+        question_image_s3_key=question.question_image_s3_key,
+        answer_image_s3_key=question.answer_image_s3_key,
+        correct_choice=question.correct_choice,
+    )
 
     db.add(question_model)
     db.commit()
