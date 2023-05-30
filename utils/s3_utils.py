@@ -1,4 +1,4 @@
-import logging
+import asyncio
 from pathlib import Path
 
 import boto3
@@ -13,13 +13,11 @@ def get_s3_client():
 
         return s3_client
 
-def upload_file(file_path: Path, bucket: str, object_name: str) -> bool:
+async def upload_file(file_path: Path, bucket: str, object_name: str):
         s3_client = get_s3_client()
 
-        try:
+        def upload_file_func():
             s3_client.upload_file(file_path, bucket, object_name)
-        except ClientError as e:
-            logging.error(e)
-            return False
-        
-        return True
+
+        # See https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-5.html
+        await asyncio.to_thread(upload_file_func)

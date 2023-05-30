@@ -1,6 +1,7 @@
+import logging
 import os
 
-from fastapi import APIRouter, Depends, UploadFile
+from fastapi import APIRouter, Depends, HTTPException, UploadFile
 
 from app.data.env_consts import SHSAT_IMAGE_BUCKET
 from app.data.question_enums import QuestionOrAnswer
@@ -67,9 +68,20 @@ async def create_image_question(
     local_image_path = generate_official_question_local_image_path(
         official_test_year, official_test_form, question_or_answer, question_number
     )
-    await process_images(files, local_image_path)
+    try:
+        await process_images(files, local_image_path)
+    except Exception as e:
+        logging.error(e)
+        raise HTTPException(status_code=500, detail="Error processing image")
+
     image_s3_key = generate_official_question_s3_image_path(
         official_test_year, official_test_form, question_or_answer, question_number
     )
-    upload_file(local_image_path, os.getenv(SHSAT_IMAGE_BUCKET), image_s3_key)
+
+    try:
+        await upload_file(local_image_path, os.getenv(SHSAT_IMAGE_BUCKET), image_s3_key)
+    except Exception as e:
+        logging.error(e)
+        raise HTTPException(status_code=500, detail="Error uploading image to S3")
+
     return {"image_s3_key": image_s3_key}
