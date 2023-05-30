@@ -25,6 +25,8 @@ pre-commit runs some checks whenever you commit your code to fix formatting and 
 ## Create the database
 Only needs to be done once. In pgadmin, create a database called `shsat` and then copy and run everything from `db_schema/schema.sql` on the new database.
 
+Then, add some initial data to the database by copying and running everything in `db_schema/data.sql`.
+
 ## Running the API
 Get .env file from the team for environment variable configuration. Make sure the selected Python interpreter in VS Code is from your virtual environment. 
 
