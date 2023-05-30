@@ -76,14 +76,48 @@ class MultipleChoiceQuestion(TextQuestion):
     answers: list[MultipleChoiceAnswer]
 
 
+class ImageQuestionBase(QuestionBase):
+    question_image_s3_key: str
+    answer_image_s3_key: str
+
+
+class ImageQuestionCreate(ImageQuestionBase):
+    pass
+
+
+class ImageQuestion(ImageQuestionBase, Question):
+    pass
+
+
+class FillInImageQuestionCreate(ImageQuestionCreate):
+    answer: float
+
+
+class FillInImageQuestion(ImageQuestion):
+    q_type: Literal[QuestionType.FILL_IN_IMAGE]
+    answer: float
+
+
+class MultipleChoiceImageQuestionCreate(ImageQuestionCreate):
+    correct_choice: int
+
+
+class MultipleChoiceImageQuestion(ImageQuestion):
+    q_type: Literal[QuestionType.MULTIPLE_CHOICE_IMAGE]
+    correct_choice: int
+
+
 # For returning list of either FillInQuestion or MultipleChoiceQuestion from route
 # See https://stackoverflow.com/questions/73945126/how-to-return-a-response-with-a-list-of-different-pydantic-models-using-fastapi # noqa: E501
 
 
 class QuestionWithAnswers(BaseModel):
-    __root__: Union[FillInQuestion, MultipleChoiceQuestion] = Field(
-        ..., discriminator="q_type"
-    )
+    __root__: Union[
+        FillInQuestion,
+        MultipleChoiceQuestion,
+        FillInImageQuestion,
+        MultipleChoiceImageQuestion,
+    ] = Field(..., discriminator="q_type")
 
     class Config:
         orm_mode = True

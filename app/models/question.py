@@ -1,24 +1,13 @@
-import enum
 from datetime import datetime
 from typing import Any, List, Optional
 
 from sqlalchemy import CheckConstraint, ForeignKey, Numeric, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
+from app.data.question_enums import QuestionType, QuestionUsage
 from app.database import Base
 
 # see https://docs.sqlalchemy.org/en/20/orm/declarative_tables.html#using-python-enum-or-pep-586-literal-types-in-the-type-map for enum info # noqa: E501
-
-
-class QuestionType(enum.Enum):
-    MULTIPLE_CHOICE = "MULTIPLE_CHOICE"
-    FILL_IN = "FILL_IN"
-
-
-class QuestionUsage(enum.Enum):
-    OFFICIAL_TEST_QUESTION = "OFFICIAL_TEST_QUESTION"
-    TEST_QUESTION = "TEST_QUESTION"
-    PROBLEM_SET_QUESTION = "PROBLEM_SET_QUESTION"
 
 
 class Question(Base):
@@ -87,4 +76,42 @@ class MultipleChoiceQuestion(TextQuestion):
 
     __mapper_args__: dict[str, Any] = {
         "polymorphic_identity": QuestionType.MULTIPLE_CHOICE
+    }
+
+
+class ImageQuestion(Question):
+    __tablename__ = "image_question"
+
+    question_id: Mapped[int] = mapped_column(
+        ForeignKey("question.id"), primary_key=True
+    )
+    question_image_s3_key: Mapped[str]
+    answer_image_s3_key: Mapped[str]
+
+    __mapper_args__: dict[str, Any] = {
+        "polymorphic_abstract": True,
+    }
+
+
+class FillInImageQuestion(ImageQuestion):
+    __tablename__ = "fill_in_image_question"
+    question_id: Mapped[int] = mapped_column(
+        ForeignKey("image_question.question_id"), primary_key=True
+    )
+    answer: Mapped[float] = mapped_column(Numeric(7, 3))
+
+    __mapper_args__: dict[str, Any] = {
+        "polymorphic_identity": QuestionType.FILL_IN_IMAGE
+    }
+
+
+class MultipleChoiceImageQuestion(ImageQuestion):
+    __tablename__ = "multiple_choice_image_question"
+    question_id: Mapped[int] = mapped_column(
+        ForeignKey("image_question.question_id"), primary_key=True
+    )
+    correct_choice: Mapped[int]
+
+    __mapper_args__: dict[str, Any] = {
+        "polymorphic_identity": QuestionType.MULTIPLE_CHOICE_IMAGE
     }

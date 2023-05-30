@@ -8,9 +8,13 @@ fastapi = "*"
 uvicorn = "*"
 sqlalchemy = "*"
 psycopg2-binary = "*"
-pre-commit = "*"
+python-multipart = "*"
+pillow = "*"
+pytest = "*"
+boto3 = "*"
 
 [dev-packages]
+pre-commit = "*"
 
 [requires]
 python_version = "3.11"

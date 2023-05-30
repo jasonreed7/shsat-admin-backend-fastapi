@@ -8,7 +8,7 @@ END;
 $$ language 'plpgsql';
 
 -- Enums
-CREATE TYPE question_type AS ENUM ('MULTIPLE_CHOICE', 'FILL_IN');
+CREATE TYPE question_type AS ENUM ('MULTIPLE_CHOICE', 'FILL_IN', 'MULTIPLE_CHOICE_IMAGE', 'FILL_IN_IMAGE');
 CREATE TYPE question_usage AS ENUM ('OFFICIAL_TEST_QUESTION', 'TEST_QUESTION', 'PROBLEM_SET_QUESTION');
 
 -- Official Test Table
@@ -85,6 +85,25 @@ CREATE TRIGGER check_correct_choices_trigger
 BEFORE INSERT OR UPDATE ON multiple_choice_answer
 FOR EACH ROW
 EXECUTE PROCEDURE check_correct_choices();
+
+-- Image Question Table
+CREATE TABLE image_question (
+    question_id BIGINT PRIMARY KEY REFERENCES question(id) ON DELETE CASCADE,
+    question_image_s3_key TEXT NOT NULL,
+    answer_image_s3_key TEXT NOT NULL
+);
+
+-- Fill In Image Question Table
+CREATE TABLE fill_in_image_question (
+    question_id BIGINT PRIMARY KEY REFERENCES image_question(question_id) ON DELETE CASCADE,
+    answer NUMERIC(7, 3) NOT NULL
+);
+
+-- Multiple Choice Image Question Table
+CREATE TABLE multiple_choice_image_question (
+    question_id BIGINT PRIMARY KEY REFERENCES image_question(question_id) ON DELETE CASCADE,
+    correct_choice INT NOT NULL CHECK (correct_choice BETWEEN 1 AND 4)
+);
 
 -- Category Table
 CREATE TABLE category (
