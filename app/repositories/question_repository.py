@@ -141,6 +141,7 @@ def update_question(
         question_class == question_models.MultipleChoiceQuestion
         and question_update.answers
     ):
+        # If answers are sent, replace all existing answers with the sent answers
         question_model.answers.clear()
         # If we don't flush here a SQL update is run which can trigger
         # the only one correct answer check constraint
