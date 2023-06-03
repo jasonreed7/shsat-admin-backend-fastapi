@@ -1,13 +1,28 @@
 from datetime import datetime
 from typing import Any, List, Optional
 
-from sqlalchemy import CheckConstraint, ForeignKey, Numeric, func
+from sqlalchemy import (
+    CheckConstraint,
+    Column,
+    ForeignKey,
+    Numeric,
+    Table,
+    func,
+)
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.data.question_enums import QuestionType, QuestionUsage
 from app.database import Base
 
 # see https://docs.sqlalchemy.org/en/20/orm/declarative_tables.html#using-python-enum-or-pep-586-literal-types-in-the-type-map for enum info # noqa: E501
+
+
+question_tag_table = Table(
+    "question_tag",
+    Base.metadata,
+    Column("question_id", ForeignKey("question.id")),
+    Column("tag_id", ForeignKey("tag.id")),
+)
 
 
 class Question(Base):
@@ -20,6 +35,9 @@ class Question(Base):
     official_test_question_number: Mapped[Optional[int]]
     q_type: Mapped[QuestionType]
     usage: Mapped[Optional[QuestionUsage]]
+    tags: Mapped[List["Tag"]] = relationship(  # noqa: F821
+        secondary=question_tag_table, back_populates="questions"
+    )
     created_at: Mapped[datetime] = mapped_column(default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         default=func.now(), onupdate=func.now()
@@ -72,7 +90,9 @@ class FillInQuestion(TextQuestion):
 
 
 class MultipleChoiceQuestion(TextQuestion):
-    answers: Mapped[List[MultipleChoiceAnswer]] = relationship()
+    answers: Mapped[List[MultipleChoiceAnswer]] = relationship(
+        "MultipleChoiceAnswer", cascade="all, delete-orphan"
+    )
 
     __mapper_args__: dict[str, Any] = {
         "polymorphic_identity": QuestionType.MULTIPLE_CHOICE

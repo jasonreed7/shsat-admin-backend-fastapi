@@ -57,6 +57,10 @@ class Tag(TagBase):
     updated_at: datetime
 
 
+class TagReference(BaseModel):
+    id: int
+
+
 class ResourceBase(BaseModel):
     tag_id: int
     name: Optional[str]
