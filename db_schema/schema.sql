@@ -16,10 +16,15 @@ CREATE TYPE question_type AS ENUM (
     'FILL_IN_IMAGE'
 );
 
-CREATE TYPE question_usage AS ENUM (
+CREATE TYPE usage_type AS ENUM (
     'OFFICIAL_TEST_QUESTION',
     'TEST_QUESTION',
     'PROBLEM_SET_QUESTION'
+);
+
+CREATE TYPE passage_type AS ENUM (
+    'IMAGE',
+    'TEXT'
 );
 
 -- Official Test Table
@@ -42,7 +47,7 @@ CREATE TABLE question (
     official_test_id BIGINT REFERENCES official_test(id),
     official_test_question_number INT,
     q_type question_type NOT NULL,
-    usage question_usage,
+    usage usage_type,
     created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
 );
@@ -196,3 +201,27 @@ CREATE TABLE question_tag (
 CREATE TRIGGER update_updated_at_question_tag BEFORE
 UPDATE
     ON question_tag FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+CREATE TABLE passage (
+    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    official_test_id BIGINT REFERENCES official_test(id),
+    title TEXT NOT NULL,
+    p_type passage_type NOT NULL,
+    usage usage_type,
+    created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
+    updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
+);
+
+CREATE TRIGGER update_updated_at_passage BEFORE
+UPDATE
+    ON passage FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
+
+CREATE TABLE text_passage (
+    passage_id BIGINT PRIMARY KEY REFERENCES passage(id) ON DELETE CASCADE,
+    passage_text TEXT NOT NULL
+);
+
+CREATE TABLE image_passage (
+    passage_id BIGINT PRIMARY KEY REFERENCES passage(id) ON DELETE CASCADE,
+    passage_image_s3_key TEXT NOT NULL
+);

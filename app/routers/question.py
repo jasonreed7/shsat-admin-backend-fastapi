@@ -130,3 +130,22 @@ async def process_and_upload_images(
         raise HTTPException(status_code=500, detail="Error uploading image to S3")
 
     return {"image_s3_key": image_s3_key}
+
+
+@router.post("/imagePassage")
+def create_image_passage(
+    passage: question_schemas.ImagePassageCreate, db: SessionLocal = Depends(get_db)
+) -> question_schemas.ImagePassage:
+    return question_repository.create_image_passage(db, passage)
+
+
+@router.post("/textPassage")
+def create_text_passage(
+    passage: question_schemas.TextPassageCreate, db: SessionLocal = Depends(get_db)
+) -> question_schemas.TextPassage:
+    return question_repository.create_text_passage(db, passage)
+
+
+@router.get("/passages")
+def get_passages(db: SessionLocal = Depends(get_db)) -> list[question_schemas.Passage]:
+    return question_repository.get_passages(db)
