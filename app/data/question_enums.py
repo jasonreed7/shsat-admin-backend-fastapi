@@ -8,7 +8,7 @@ class QuestionType(Enum):
     FILL_IN_IMAGE = "FILL_IN_IMAGE"
 
 
-class QuestionUsage(Enum):
+class UsageType(Enum):
     OFFICIAL_TEST_QUESTION = "OFFICIAL_TEST_QUESTION"
     TEST_QUESTION = "TEST_QUESTION"
     PROBLEM_SET_QUESTION = "PROBLEM_SET_QUESTION"
@@ -17,3 +17,8 @@ class QuestionUsage(Enum):
 class QuestionOrAnswer(str, Enum):
     QUESTION = "question"
     ANSWER = "answer"
+
+
+class PassageType(Enum):
+    IMAGE = "IMAGE"
+    TEXT = "TEXT"

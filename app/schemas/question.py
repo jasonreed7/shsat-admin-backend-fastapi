@@ -3,7 +3,8 @@ from typing import List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from app.models.question import QuestionType, QuestionUsage
+from app.data.question_enums import PassageType
+from app.models.question import QuestionType, UsageType
 from app.schemas.tag import Tag, TagReference
 
 
@@ -11,7 +12,7 @@ class QuestionBase(BaseModel):
     official_test_id: int
     official_test_question_number: int
     q_type: QuestionType
-    usage: Optional[QuestionUsage]
+    usage: Optional[UsageType]
 
     class Config:
         orm_mode = True
@@ -20,7 +21,7 @@ class QuestionBase(BaseModel):
 class QuestionUpdate(BaseModel):
     official_test_id: Optional[int]
     official_test_question_number: Optional[int]
-    usage: Optional[QuestionUsage]
+    usage: Optional[UsageType]
     tags: Optional[List[TagReference]]
 
 
@@ -162,3 +163,61 @@ class QuestionWithAnswers(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class PassageBase(BaseModel):
+    official_test_id: Optional[int]
+    p_type: PassageType
+    title: str
+    usage: Optional[UsageType]
+
+    class Config:
+        orm_mode = True
+
+
+class PassageUpdate(BaseModel):
+    official_test_id: Optional[int]
+    title: Optional[str]
+    usage: Optional[UsageType]
+
+
+class PassageCreate(PassageBase):
+    pass
+
+
+class Passage(PassageBase):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+
+
+class ImagePassageBase(PassageBase):
+    passage_image_s3_key: str
+
+
+class ImagePassageCreate(ImagePassageBase, PassageCreate):
+    pass
+
+
+class ImagePassageUpdate(PassageUpdate):
+    passage_image_s3_key: Optional[str]
+
+
+class ImagePassage(ImagePassageBase, Passage):
+    pass
+
+
+class TextPassageBase(PassageBase):
+    passage_text: str
+
+
+class TextPassageCreate(TextPassageBase, PassageCreate):
+    pass
+
+
+class TextPassageUpdate(PassageUpdate):
+    passage_text: Optional[str]
+
+
+class TextPassage(TextPassageBase, Passage):
+    pass

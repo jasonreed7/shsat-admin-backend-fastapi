@@ -5,6 +5,7 @@ from fastapi import HTTPException
 from sqlalchemy import select
 from sqlalchemy.orm import selectin_polymorphic
 
+from app.data.question_enums import PassageType
 from app.database import SessionLocal
 from app.exceptions.exceptions import TagNotFoundException
 from app.models import question as question_models
@@ -175,3 +176,51 @@ def get_tags(
         logging.warning(message)
         raise TagNotFoundException(message)
     return tags
+
+
+def get_passages(db: SessionLocal) -> list[question_models.Passage]:
+    loader_opt = selectin_polymorphic(
+        question_models.Passage,
+        [question_models.ImagePassage, question_models.TextPassage],
+    )
+    stmt = (
+        select(question_models.Passage)
+        .order_by(question_models.Passage.id)
+        .options(loader_opt)
+    )
+    result = db.scalars(stmt).all()
+    return result
+
+
+def create_image_passage(
+    db: SessionLocal, passage: question_schemas.ImagePassageCreate
+) -> question_models.ImagePassage:
+    passage_model = question_models.ImagePassage(
+        official_test_id=passage.official_test_id,
+        title=passage.title,
+        p_type=PassageType.IMAGE,
+        passage_image_s3_key=passage.passage_image_s3_key,
+        usage=passage.usage,
+    )
+
+    db.add(passage_model)
+    db.commit()
+
+    return passage_model
+
+
+def create_text_passage(
+    db: SessionLocal, passage: question_schemas.TextPassageCreate
+) -> question_models.TextPassage:
+    passage_model = question_models.TextPassage(
+        official_test_id=passage.official_test_id,
+        title=passage.title,
+        p_type=PassageType.TEXT,
+        passage_text=passage.passage_text,
+        usage=passage.usage,
+    )
+
+    db.add(passage_model)
+    db.commit()
+
+    return passage_model

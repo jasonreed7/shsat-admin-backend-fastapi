@@ -11,7 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.data.question_enums import QuestionType, QuestionUsage
+from app.data.question_enums import PassageType, QuestionType, UsageType
 from app.database import Base
 
 # see https://docs.sqlalchemy.org/en/20/orm/declarative_tables.html#using-python-enum-or-pep-586-literal-types-in-the-type-map for enum info # noqa: E501
@@ -34,7 +34,7 @@ class Question(Base):
     )
     official_test_question_number: Mapped[Optional[int]]
     q_type: Mapped[QuestionType]
-    usage: Mapped[Optional[QuestionUsage]]
+    usage: Mapped[Optional[UsageType]]
     tags: Mapped[List["Tag"]] = relationship(  # noqa: F821
         secondary=question_tag_table, back_populates="questions"
     )
@@ -135,3 +135,39 @@ class MultipleChoiceImageQuestion(ImageQuestion):
     __mapper_args__: dict[str, Any] = {
         "polymorphic_identity": QuestionType.MULTIPLE_CHOICE_IMAGE
     }
+
+
+class Passage(Base):
+    __tablename__ = "passage"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    official_test_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("official_test.id")
+    )
+    p_type: Mapped[PassageType]
+    title: Mapped[str]
+    usage: Mapped[Optional[UsageType]]
+    created_at: Mapped[datetime] = mapped_column(default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        default=func.now(), onupdate=func.now()
+    )
+
+    __mapper_args__ = {
+        "polymorphic_on": "p_type",
+    }
+
+
+class TextPassage(Passage):
+    __tablename__ = "text_passage"
+    passage_id: Mapped[int] = mapped_column(ForeignKey("passage.id"), primary_key=True)
+    passage_text: Mapped[str]
+
+    __mapper_args__: dict[str, Any] = {"polymorphic_identity": PassageType.TEXT}
+
+
+class ImagePassage(Passage):
+    __tablename__ = "image_passage"
+    passage_id: Mapped[int] = mapped_column(ForeignKey("passage.id"), primary_key=True)
+    passage_image_s3_key: Mapped[str]
+
+    __mapper_args__: dict[str, Any] = {"polymorphic_identity": PassageType.IMAGE}
