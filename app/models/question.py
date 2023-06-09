@@ -11,7 +11,13 @@ from sqlalchemy import (
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from app.data.question_enums import PassageType, QuestionType, UsageType
+from app.data.question_enums import (
+    PassageType,
+    QuestionType,
+    Section,
+    SubSection,
+    UsageType,
+)
 from app.database import Base
 
 # see https://docs.sqlalchemy.org/en/20/orm/declarative_tables.html#using-python-enum-or-pep-586-literal-types-in-the-type-map for enum info # noqa: E501
@@ -35,6 +41,8 @@ class Question(Base):
     official_test_question_number: Mapped[Optional[int]]
     q_type: Mapped[QuestionType]
     usage: Mapped[Optional[UsageType]]
+    section: Mapped[Optional[Section]]
+    sub_section: Mapped[Optional[SubSection]]
     tags: Mapped[List["Tag"]] = relationship(  # noqa: F821
         secondary=question_tag_table, back_populates="questions"
     )
@@ -147,6 +155,8 @@ class Passage(Base):
     p_type: Mapped[PassageType]
     title: Mapped[str]
     usage: Mapped[Optional[UsageType]]
+    section: Mapped[Optional[Section]]
+    sub_section: Mapped[Optional[SubSection]]
     created_at: Mapped[datetime] = mapped_column(default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         default=func.now(), onupdate=func.now()
