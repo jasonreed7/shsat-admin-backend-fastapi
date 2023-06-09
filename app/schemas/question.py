@@ -3,7 +3,7 @@ from typing import List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from app.data.question_enums import PassageType
+from app.data.question_enums import PassageType, Section, SubSection
 from app.models.question import QuestionType, UsageType
 from app.schemas.tag import Tag, TagReference
 
@@ -13,6 +13,8 @@ class QuestionBase(BaseModel):
     official_test_question_number: int
     q_type: QuestionType
     usage: Optional[UsageType]
+    section: Optional[Section]
+    sub_section: Optional[SubSection]
 
     class Config:
         orm_mode = True
@@ -22,6 +24,8 @@ class QuestionUpdate(BaseModel):
     official_test_id: Optional[int]
     official_test_question_number: Optional[int]
     usage: Optional[UsageType]
+    section: Optional[Section]
+    sub_section: Optional[SubSection]
     tags: Optional[List[TagReference]]
 
 
@@ -170,6 +174,8 @@ class PassageBase(BaseModel):
     p_type: PassageType
     title: str
     usage: Optional[UsageType]
+    section: Optional[Section]
+    sub_section: Optional[SubSection]
 
     class Config:
         orm_mode = True
@@ -179,6 +185,8 @@ class PassageUpdate(BaseModel):
     official_test_id: Optional[int]
     title: Optional[str]
     usage: Optional[UsageType]
+    section: Optional[Section]
+    sub_section: Optional[SubSection]
 
 
 class PassageCreate(PassageBase):

@@ -25,6 +25,18 @@ CREATE TYPE usage_type AS ENUM (
 CREATE TYPE passage_type AS ENUM (
     'IMAGE',
     'TEXT'
+)
+
+CREATE TYPE section AS ENUM (
+    'MATH',
+    'ENGLISH'
+);
+
+CREATE TYPE sub_section AS ENUM (
+    'REVISING_EDITING',
+    'READING_COMPREHENSION',
+    'MATH_FILL_IN',
+    'MATH_MULTIPLE_CHOICE'
 );
 
 -- Official Test Table
@@ -48,6 +60,8 @@ CREATE TABLE question (
     official_test_question_number INT,
     q_type question_type NOT NULL,
     usage usage_type,
+    section section,
+    sub_section sub_section,
     created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
 );
@@ -208,6 +222,8 @@ CREATE TABLE passage (
     title TEXT NOT NULL,
     p_type passage_type NOT NULL,
     usage usage_type,
+    section section,
+    sub_section sub_section,
     created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
 );

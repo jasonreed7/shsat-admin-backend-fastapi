@@ -22,3 +22,15 @@ class QuestionOrAnswer(str, Enum):
 class PassageType(Enum):
     IMAGE = "IMAGE"
     TEXT = "TEXT"
+
+
+class Section(Enum):
+    MATH = "MATH"
+    ENGLISH = "ENGLISH"
+
+
+class SubSection(Enum):
+    REVISING_EDITING = "REVISING_EDITING"
+    READING_COMPREHENSION = "READING_COMPREHENSION"
+    MATH_FILL_IN = "MATH_FILL_IN"
+    MATH_MULTIPLE_CHOICE = "MATH_MULTIPLE_CHOICE"
