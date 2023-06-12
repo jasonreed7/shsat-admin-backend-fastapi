@@ -212,7 +212,7 @@ class ImagePassageUpdate(PassageUpdate):
 
 
 class ImagePassage(ImagePassageBase, Passage):
-    pass
+    p_type: Literal[PassageType.IMAGE]
 
 
 class TextPassageBase(PassageBase):
@@ -228,4 +228,14 @@ class TextPassageUpdate(PassageUpdate):
 
 
 class TextPassage(TextPassageBase, Passage):
-    pass
+    p_type: Literal[PassageType.TEXT]
+
+
+class PassageUnion(BaseModel):
+    __root__: Union[
+        TextPassage,
+        ImagePassage,
+    ] = Field(..., discriminator="p_type")
+
+    class Config:
+        orm_mode = True

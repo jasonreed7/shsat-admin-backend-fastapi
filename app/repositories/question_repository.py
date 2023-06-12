@@ -234,3 +234,22 @@ def create_text_passage(
     db.commit()
 
     return passage_model
+
+
+def update_passage(
+    db: SessionLocal,
+    passage_id: int,
+    passage_update: question_schemas.PassageUpdate,
+    passage_class: type[question_models.Passage],
+) -> question_models.Passage:
+    passage_model = db.get(passage_class, passage_id)
+    if not passage_model:
+        raise HTTPException(400, f"Passage not found, id: {passage_id}")
+    passage_data = passage_update.dict(exclude_unset=True)
+    for key, value in passage_data.items():
+        setattr(passage_model, key, value)
+
+    db.add(passage_model)
+
+    db.commit()
+    return passage_model
