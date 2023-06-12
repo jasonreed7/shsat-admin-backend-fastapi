@@ -1,12 +1,11 @@
 -- Function for use in triggers to automatically update updated_at column
-CREATE
-OR REPLACE FUNCTION update_updated_at_column() RETURNS TRIGGER AS $ $ BEGIN NEW.updated_at = NOW();
-
-RETURN NEW;
-
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = NOW();
+    RETURN NEW;
 END;
-
-$ $ language 'plpgsql';
+$$ language 'plpgsql';
 
 -- Enums
 CREATE TYPE question_type AS ENUM (
@@ -22,15 +21,7 @@ CREATE TYPE usage_type AS ENUM (
     'PROBLEM_SET_QUESTION'
 );
 
-CREATE TYPE passage_type AS ENUM (
-    'IMAGE',
-    'TEXT'
-)
-
-CREATE TYPE section AS ENUM (
-    'MATH',
-    'ENGLISH'
-);
+CREATE TYPE passage_type AS ENUM ('IMAGE', 'TEXT') CREATE TYPE section AS ENUM ('MATH', 'ENGLISH');
 
 CREATE TYPE sub_section AS ENUM (
     'REVISING_EDITING',
@@ -101,25 +92,15 @@ UPDATE
     ON multiple_choice_answer FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
 
 -- Check that there is exactly one correct choice per question 
-CREATE
-OR REPLACE FUNCTION check_correct_choices() RETURNS TRIGGER AS $ $ BEGIN IF (
-    SELECT
-        COUNT(*)
-    FROM
-        multiple_choice_answer
-    WHERE
-        question_id = NEW.question_id
-        AND is_correct = TRUE
-) > 1 THEN RAISE EXCEPTION 'More than one correct choice for question %',
-NEW.question_id;
-
-END IF;
-
-RETURN NEW;
-
+CREATE OR REPLACE FUNCTION check_correct_choices()
+RETURNS TRIGGER AS $$
+BEGIN
+    IF (SELECT COUNT(*) FROM multiple_choice_answer WHERE question_id = NEW.question_id AND is_correct = TRUE) > 1 THEN
+        RAISE EXCEPTION 'More than one correct choice for question %', NEW.question_id;
+    END IF;
+    RETURN NEW;
 END;
-
-$ $ language 'plpgsql';
+$$ language 'plpgsql';
 
 CREATE TRIGGER check_correct_choices_trigger BEFORE
 INSERT
