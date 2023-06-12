@@ -147,5 +147,29 @@ def create_text_passage(
 
 
 @router.get("/passages")
-def get_passages(db: SessionLocal = Depends(get_db)) -> list[question_schemas.Passage]:
+def get_passages(
+    db: SessionLocal = Depends(get_db),
+) -> list[question_schemas.PassageUnion]:
     return question_repository.get_passages(db)
+
+
+@router.patch("/textPassage/{passage_id}")
+def update_text_passage(
+    passage_id: int,
+    passage_data: question_schemas.TextPassageUpdate,
+    db: SessionLocal = Depends(get_db),
+) -> question_schemas.TextPassage:
+    return question_repository.update_passage(
+        db, passage_id, passage_data, question_models.TextPassage
+    )
+
+
+@router.patch("/imagePassage/{passage_id}")
+def update_image_passage(
+    passage_id: int,
+    passage_data: question_schemas.ImagePassageUpdate,
+    db: SessionLocal = Depends(get_db),
+) -> question_schemas.ImagePassage:
+    return question_repository.update_passage(
+        db, passage_id, passage_data, question_models.ImagePassage
+    )
