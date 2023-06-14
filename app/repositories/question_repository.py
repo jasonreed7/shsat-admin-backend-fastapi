@@ -38,6 +38,7 @@ def create_fill_in_question(
         explanation=question.explanation,
         usage=question.usage,
         answer=question.answer,
+        passage_id=question.passage_id,
         tags=get_tags(db, question),
     )
 
@@ -59,6 +60,7 @@ def create_multiple_choice_question(
         sub_section=question.sub_section,
         explanation=question.explanation,
         usage=question.usage,
+        passage_id=question.passage_id,
         tags=get_tags(db, question),
     )
 
@@ -90,6 +92,7 @@ def create_fill_in_image_question(
         question_image_s3_key=question.question_image_s3_key,
         answer_image_s3_key=question.answer_image_s3_key,
         answer=question.answer,
+        passage_id=question.passage_id,
         tags=get_tags(db, question),
     )
 
@@ -112,6 +115,7 @@ def create_multiple_choice_image_question(
         question_image_s3_key=question.question_image_s3_key,
         answer_image_s3_key=question.answer_image_s3_key,
         correct_choice=question.correct_choice,
+        passage_id=question.passage_id,
         tags=get_tags(db, question),
     )
 

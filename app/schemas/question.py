@@ -15,6 +15,7 @@ class QuestionBase(BaseModel):
     usage: Optional[UsageType]
     section: Optional[Section]
     sub_section: Optional[SubSection]
+    passage_id: Optional[int]
 
     class Config:
         orm_mode = True
@@ -26,6 +27,7 @@ class QuestionUpdate(BaseModel):
     usage: Optional[UsageType]
     section: Optional[Section]
     sub_section: Optional[SubSection]
+    passage_id: Optional[int]
     tags: Optional[List[TagReference]]
 
 
