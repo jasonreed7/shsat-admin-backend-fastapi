@@ -53,6 +53,7 @@ CREATE TABLE question (
     usage usage_type,
     section section,
     sub_section sub_section,
+    passage_id BIGINT REFERENCES passage(id),
     created_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL,
     updated_at TIMESTAMPTZ DEFAULT current_timestamp NOT NULL
 );
@@ -200,7 +201,7 @@ UPDATE
 CREATE TABLE passage (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     official_test_id BIGINT REFERENCES official_test(id),
-    title TEXT NOT NULL,
+    title TEXT NOT NULL UNIQUE,
     p_type passage_type NOT NULL,
     usage usage_type,
     section section,

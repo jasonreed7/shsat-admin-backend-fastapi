@@ -12,6 +12,7 @@ class QuestionBase(BaseModel):
     official_test_id: int
     official_test_question_number: int
     q_type: QuestionType
+    passage_id: Optional[int]
     usage: Optional[UsageType]
     section: Optional[Section]
     sub_section: Optional[SubSection]
@@ -23,6 +24,7 @@ class QuestionBase(BaseModel):
 class QuestionUpdate(BaseModel):
     official_test_id: Optional[int]
     official_test_question_number: Optional[int]
+    passage_id: Optional[int]
     usage: Optional[UsageType]
     section: Optional[Section]
     sub_section: Optional[SubSection]

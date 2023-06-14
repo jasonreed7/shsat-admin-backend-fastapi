@@ -43,6 +43,8 @@ class Question(Base):
     usage: Mapped[Optional[UsageType]]
     section: Mapped[Optional[Section]]
     sub_section: Mapped[Optional[SubSection]]
+    passage_id: Mapped[Optional[int]] = mapped_column(ForeignKey("passage.id"))
+    passage: Mapped["Passage"] = relationship(back_populates="questions")
     tags: Mapped[List["Tag"]] = relationship(  # noqa: F821
         secondary=question_tag_table, back_populates="questions"
     )
@@ -157,6 +159,7 @@ class Passage(Base):
     usage: Mapped[Optional[UsageType]]
     section: Mapped[Optional[Section]]
     sub_section: Mapped[Optional[SubSection]]
+    questions: Mapped[List["Question"]] = relationship(back_populates="passage")
     created_at: Mapped[datetime] = mapped_column(default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         default=func.now(), onupdate=func.now()
