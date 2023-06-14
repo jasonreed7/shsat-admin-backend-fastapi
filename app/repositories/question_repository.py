@@ -34,11 +34,11 @@ def create_fill_in_question(
         official_test_id=question.official_test_id,
         official_test_question_number=question.official_test_question_number,
         question_text=question.question_text,
-        passage_id=question.passage_id,
         q_type=question_models.QuestionType.FILL_IN,
         explanation=question.explanation,
         usage=question.usage,
         answer=question.answer,
+        passage_id=question.passage_id,
         tags=get_tags(db, question),
     )
 
@@ -56,11 +56,11 @@ def create_multiple_choice_question(
         official_test_question_number=question.official_test_question_number,
         question_text=question.question_text,
         q_type=question_models.QuestionType.MULTIPLE_CHOICE,
-        passage_id=question.passage_id,
         section=question.section,
         sub_section=question.sub_section,
         explanation=question.explanation,
         usage=question.usage,
+        passage_id=question.passage_id,
         tags=get_tags(db, question),
     )
 
@@ -87,12 +87,12 @@ def create_fill_in_image_question(
         official_test_question_number=question.official_test_question_number,
         q_type=question_models.QuestionType.FILL_IN_IMAGE,
         usage=question.usage,
-        passage_id=question.passage_id,
         section=question.section,
         sub_section=question.sub_section,
         question_image_s3_key=question.question_image_s3_key,
         answer_image_s3_key=question.answer_image_s3_key,
         answer=question.answer,
+        passage_id=question.passage_id,
         tags=get_tags(db, question),
     )
 
@@ -110,12 +110,12 @@ def create_multiple_choice_image_question(
         official_test_question_number=question.official_test_question_number,
         q_type=question_models.QuestionType.MULTIPLE_CHOICE_IMAGE,
         usage=question.usage,
-        passage_id=question.passage_id,
         section=question.section,
         sub_section=question.sub_section,
         question_image_s3_key=question.question_image_s3_key,
         answer_image_s3_key=question.answer_image_s3_key,
         correct_choice=question.correct_choice,
+        passage_id=question.passage_id,
         tags=get_tags(db, question),
     )
 
