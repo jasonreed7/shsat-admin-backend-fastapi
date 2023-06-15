@@ -1,3 +1,4 @@
+from fastapi import HTTPException
 from sqlalchemy import select
 
 from app.database import SessionLocal
@@ -75,4 +76,70 @@ def create_resource(
     db.add(resource_model)
     db.commit()
 
+    return resource_model
+
+
+def update_category(
+    db: SessionLocal, category_id: int, category_update: tag_schemas.CategoryUpdate
+) -> tag_models.Category:
+    category_model = db.get(tag_models.Category, category_id)
+    if not category_model:
+        raise HTTPException(400, f"Passage not found, id: {category_id}")
+    category_data = category_update.dict(exclude_unset=True)
+    for key, value in category_data.items():
+        setattr(category_model, key, value)
+
+    db.add(category_model)
+
+    db.commit()
+    return category_model
+
+
+def update_subcategory(
+    db: SessionLocal,
+    subcategory_id: int,
+    subcategory_update: tag_schemas.SubcategoryUpdate,
+) -> tag_models.Subcategory:
+    subcategory_model = db.get(tag_models.Subcategory, subcategory_id)
+    if not subcategory_model:
+        raise HTTPException(400, f"Passage not found, id: {subcategory_id}")
+    subcategory_data = subcategory_update.dict(exclude_unset=True)
+    for key, value in subcategory_data.items():
+        setattr(subcategory_model, key, value)
+
+    db.add(subcategory_model)
+
+    db.commit()
+    return subcategory_model
+
+
+def update_tag(
+    db: SessionLocal, tag_id: int, tag_update: tag_schemas.TagUpdate
+) -> tag_models.Tag:
+    tag_model = db.get(tag_models.Tag, tag_id)
+    if not tag_model:
+        raise HTTPException(400, f"Passage not found, id: {tag_id}")
+    tag_data = tag_update.dict(exclude_unset=True)
+    for key, value in tag_data.items():
+        setattr(tag_model, key, value)
+
+    db.add(tag_model)
+
+    db.commit()
+    return tag_model
+
+
+def update_resource(
+    db: SessionLocal, resource_id: int, resource_update: tag_schemas.ResourceUpdate
+) -> tag_models.Resource:
+    resource_model = db.get(tag_models.Resource, resource_id)
+    if not resource_model:
+        raise HTTPException(400, f"Passage not found, id: {resource_id}")
+    resource_data = resource_update.dict(exclude_unset=True)
+    for key, value in resource_data.items():
+        setattr(resource_model, key, value)
+
+    db.add(resource_model)
+
+    db.commit()
     return resource_model
