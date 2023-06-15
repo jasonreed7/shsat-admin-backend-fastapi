@@ -15,6 +15,10 @@ class CategoryCreate(CategoryBase):
     pass
 
 
+class CategoryUpdate(BaseModel):
+    name: Optional[str]
+
+
 class Category(CategoryBase):
     id: int
     created_at: datetime
@@ -33,6 +37,10 @@ class SubcategoryCreate(SubcategoryBase):
     pass
 
 
+class SubcategoryUpdate(BaseModel):
+    name: Optional[str]
+
+
 class Subcategory(SubcategoryBase):
     id: int
     created_at: datetime
@@ -49,6 +57,10 @@ class TagBase(BaseModel):
 
 class TagCreate(TagBase):
     pass
+
+
+class TagUpdate(BaseModel):
+    name: Optional[str]
 
 
 class Tag(TagBase):
@@ -73,6 +85,12 @@ class ResourceBase(BaseModel):
 
 class ResourceCreate(ResourceBase):
     pass
+
+
+class ResourceUpdate(BaseModel):
+    name: Optional[str]
+    url: Optional[str]
+    link_text: Optional[str]
 
 
 class Resource(ResourceBase):
