@@ -10,6 +10,8 @@ from app.models import question as question_models
 from app.repositories import question_repository
 from app.schemas import question as question_schemas
 from utils.file_utils import (
+    generate_official_passage_local_image_path,
+    generate_official_passage_s3_image_path,
     generate_official_question_local_image_path,
     generate_official_question_s3_image_path,
 )
@@ -103,7 +105,7 @@ def update_multiple_choice_image_question(
     "/imageQuestion/image/{official_test_year}/{official_test_form}/"
     + "{question_or_answer}/{question_number}"
 )
-async def process_and_upload_images(
+async def process_and_upload_question_images(
     files: list[UploadFile],
     official_test_year: int,
     official_test_form: str,
@@ -121,6 +123,45 @@ async def process_and_upload_images(
 
     image_s3_key = generate_official_question_s3_image_path(
         official_test_year, official_test_form, question_or_answer, question_number
+    )
+
+    try:
+        await upload_file(local_image_path, os.getenv(SHSAT_IMAGE_BUCKET), image_s3_key)
+    except Exception as e:
+        logging.error(e)
+        raise HTTPException(status_code=500, detail="Error uploading image to S3")
+
+    return {"image_s3_key": image_s3_key}
+
+
+@router.post(
+    "/imagePassage/image/{official_test_year}/{official_test_form}/"
+    + "{first_question_number}/{last_question_number}"
+)
+async def process_and_upload_passage_images(
+    files: list[UploadFile],
+    official_test_year: int,
+    official_test_form: str,
+    first_question_number: int,
+    last_question_number: int,
+):
+    local_image_path = generate_official_passage_local_image_path(
+        official_test_year,
+        official_test_form,
+        first_question_number,
+        last_question_number,
+    )
+    try:
+        await process_images(files, local_image_path)
+    except Exception as e:
+        logging.error(e)
+        raise HTTPException(status_code=500, detail="Error processing image")
+
+    image_s3_key = generate_official_passage_s3_image_path(
+        official_test_year,
+        official_test_form,
+        first_question_number,
+        last_question_number,
     )
 
     try:

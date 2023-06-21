@@ -63,6 +63,6 @@ async def process_images(files: List[UploadFile], local_image_path: Path):
 
     # Use pngquant to compress the image
     subprocess.run(['pngquant', '--force', '--output',
-                     str(local_image_path), 'temp/temp_image.png'])
+                     str(local_image_path), str(temp_path)])
     
     os.remove(temp_path)
