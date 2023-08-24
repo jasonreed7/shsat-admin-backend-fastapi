@@ -1,9 +1,9 @@
 from datetime import datetime
 
-from pydantic import BaseModel
+from fastapi_camelcase import CamelModel
 
 
-class OfficialTest(BaseModel):
+class OfficialTest(CamelModel):
     id: int
     year: int
     form: str

@@ -1,14 +1,15 @@
 from datetime import datetime
 from typing import List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field
+from fastapi_camelcase import CamelModel
+from pydantic import Field
 
 from app.data.question_enums import PassageType, Section, SubSection
 from app.models.question import QuestionType, UsageType
 from app.schemas.tag import Tag, TagReference
 
 
-class QuestionBase(BaseModel):
+class QuestionBase(CamelModel):
     official_test_id: int
     official_test_question_number: int
     q_type: QuestionType
@@ -21,7 +22,7 @@ class QuestionBase(BaseModel):
         orm_mode = True
 
 
-class QuestionUpdate(BaseModel):
+class QuestionUpdate(CamelModel):
     official_test_id: Optional[int]
     official_test_question_number: Optional[int]
     usage: Optional[UsageType]
@@ -73,7 +74,7 @@ class FillInQuestion(TextQuestion):
     answer: float
 
 
-class MultipleChoiceAnswerBase(BaseModel):
+class MultipleChoiceAnswerBase(CamelModel):
     choice_number: int
     answer_text: str
     is_correct: bool
@@ -86,7 +87,7 @@ class MultipleChoiceAnswerCreate(MultipleChoiceAnswerBase):
     pass
 
 
-class MultipleChoiceAnswerUpdate(BaseModel):
+class MultipleChoiceAnswerUpdate(CamelModel):
     choice_number: Optional[int]
     answer_text: Optional[str]
     is_correct: Optional[bool]
@@ -159,7 +160,7 @@ class MultipleChoiceImageQuestion(ImageQuestion):
 # See https://stackoverflow.com/questions/73945126/how-to-return-a-response-with-a-list-of-different-pydantic-models-using-fastapi # noqa: E501
 
 
-class QuestionWithAnswers(BaseModel):
+class QuestionWithAnswers(CamelModel):
     __root__: Union[
         FillInQuestion,
         MultipleChoiceQuestion,
@@ -171,7 +172,7 @@ class QuestionWithAnswers(BaseModel):
         orm_mode = True
 
 
-class PassageBase(BaseModel):
+class PassageBase(CamelModel):
     official_test_id: Optional[int]
     p_type: PassageType
     title: str
@@ -183,7 +184,7 @@ class PassageBase(BaseModel):
         orm_mode = True
 
 
-class PassageUpdate(BaseModel):
+class PassageUpdate(CamelModel):
     official_test_id: Optional[int]
     title: Optional[str]
     usage: Optional[UsageType]
@@ -233,7 +234,7 @@ class TextPassage(TextPassageBase, Passage):
     p_type: Literal[PassageType.TEXT]
 
 
-class PassageUnion(BaseModel):
+class PassageUnion(CamelModel):
     __root__: Union[
         TextPassage,
         ImagePassage,

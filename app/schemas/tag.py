@@ -1,10 +1,10 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from fastapi_camelcase import CamelModel
 
 
-class CategoryBase(BaseModel):
+class CategoryBase(CamelModel):
     name: str
 
     class Config:
@@ -15,7 +15,7 @@ class CategoryCreate(CategoryBase):
     pass
 
 
-class CategoryUpdate(BaseModel):
+class CategoryUpdate(CamelModel):
     name: Optional[str]
 
 
@@ -25,7 +25,7 @@ class Category(CategoryBase):
     updated_at: datetime
 
 
-class SubcategoryBase(BaseModel):
+class SubcategoryBase(CamelModel):
     category_id: int
     name: str
 
@@ -37,7 +37,7 @@ class SubcategoryCreate(SubcategoryBase):
     pass
 
 
-class SubcategoryUpdate(BaseModel):
+class SubcategoryUpdate(CamelModel):
     name: Optional[str]
 
 
@@ -47,7 +47,7 @@ class Subcategory(SubcategoryBase):
     updated_at: datetime
 
 
-class TagBase(BaseModel):
+class TagBase(CamelModel):
     subcategory_id: int
     name: str
 
@@ -59,7 +59,7 @@ class TagCreate(TagBase):
     pass
 
 
-class TagUpdate(BaseModel):
+class TagUpdate(CamelModel):
     name: Optional[str]
 
 
@@ -69,11 +69,11 @@ class Tag(TagBase):
     updated_at: datetime
 
 
-class TagReference(BaseModel):
+class TagReference(CamelModel):
     id: int
 
 
-class ResourceBase(BaseModel):
+class ResourceBase(CamelModel):
     tag_id: int
     name: Optional[str]
     url: str
@@ -87,7 +87,7 @@ class ResourceCreate(ResourceBase):
     pass
 
 
-class ResourceUpdate(BaseModel):
+class ResourceUpdate(CamelModel):
     name: Optional[str]
     url: Optional[str]
     link_text: Optional[str]

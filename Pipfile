@@ -12,6 +12,7 @@ python-multipart = "*"
 pillow = "*"
 pytest = "*"
 boto3 = "*"
+fastapi-camelcase = "*"
 
 [dev-packages]
 pre-commit = "*"

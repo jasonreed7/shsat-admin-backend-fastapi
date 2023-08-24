@@ -21,7 +21,9 @@ CREATE TYPE usage_type AS ENUM (
     'PROBLEM_SET_QUESTION'
 );
 
-CREATE TYPE passage_type AS ENUM ('IMAGE', 'TEXT') CREATE TYPE section AS ENUM ('MATH', 'ENGLISH');
+CREATE TYPE passage_type AS ENUM ('IMAGE', 'TEXT');
+
+CREATE TYPE section AS ENUM ('MATH', 'ENGLISH');
 
 CREATE TYPE sub_section AS ENUM (
     'REVISING_EDITING',
